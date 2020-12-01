@@ -45,63 +45,61 @@ db_handler = DB_handler(db_name,db_user,db_pass,db_host)
 db_handler.open_connection()
 
 
-db_handler.test_connection()
-
-#find next report ID
-# report_id_query = report_designer.get_available_id()
-
-# report_id = db_handler.execute_query(report_id_query)[0]
-
-# report_id = 10700
-# print(report_id)
-# querys = []
-
-# # create report header info 
-
-# report_header_query = report_designer.report_headers(report_id,report_lang, 23, 'stacked')
-
-# querys.append(report_header_query)
-
-# ## create columns query
-
-# report_columns_query = report_designer.create_report_columns(report_id, column_names)
 
 
-# querys.append(report_columns_query)
-# ## set group by information
-# report_groupby_query = report_designer.report_types_groupby(report_id, column_names)
+# find next report ID
+report_id_query = report_designer.get_available_id()
+
+report_id = db_handler.execute_query(report_id_query)[0]
 
 
-# querys.append(report_groupby_query)
-# ## set aggregations
-# report_aggregation_query = report_designer.report_type_aggregations(report_id, column_names)
+querys = []
 
-# querys.append(report_aggregation_query)
+# create report header info 
 
-# ## set whats mandatory for report
-# report_type_select = report_designer.report_type_select(report_id, column_names)
-# querys.append(report_type_select)
+report_header_query = report_designer.report_headers(report_id,report_lang, 23, 'stacked')
 
-# # make report name prettier
-# report_add_lang = report_designer.add_lang_kery(report_lang, report_pretty)
+querys.append(report_header_query)
 
+## create columns query
 
-# querys.append(report_add_lang)
-
-# # alter sequence
-# report_restart_sequence = report_designer.alter_sequence(report_id)
+report_columns_query = report_designer.create_report_columns(report_id, column_names)
 
 
-# querys.append(report_restart_sequence)
-
-# db_handler.execute_query(report_restart_sequence)
-# # for query in querys:
-# #     db_handler.execute_query(query)
+querys.append(report_columns_query)
+## set group by information
+report_groupby_query = report_designer.report_types_groupby(report_id, column_names)
 
 
-# data_back = db_handler.execute_query("select * from plixer.report_types_rt_id_seq ;")
+querys.append(report_groupby_query)
+## set aggregations
+report_aggregation_query = report_designer.report_type_aggregations(report_id, column_names)
 
-# print(data_back)
+querys.append(report_aggregation_query)
+
+## set whats mandatory for report
+report_type_select = report_designer.report_type_select(report_id, column_names)
+querys.append(report_type_select)
+
+# make report name prettier
+report_add_lang = report_designer.add_lang_kery(report_lang, report_pretty)
+
+
+querys.append(report_add_lang)
+
+# alter sequence
+report_restart_sequence = report_designer.alter_sequence(report_id)
+
+
+querys.append(report_restart_sequence)
+
+
+for query in querys:
+    db_handler.execute_query(query)
+
+
+
+
 
 db_handler.close_connection()
 

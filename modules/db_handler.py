@@ -20,8 +20,9 @@ class DB_handler:
         self.cur.execute(query)
         try:
             record = [r[0] for r in self.cur.fetchall()]
+            
         except:
-            record = 'nothing returned'
+            record = 'nothing_returned'
         self.conn.commit()
         return(record)
 

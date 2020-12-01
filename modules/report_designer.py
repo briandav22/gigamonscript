@@ -123,3 +123,5 @@ class Report_designer():
         return(f"ALTER SEQUENCE plixer.report_types_rt_id_seq RESTART WITH {report_id};")
 
 
+
+

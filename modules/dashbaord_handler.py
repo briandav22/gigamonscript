@@ -13,7 +13,7 @@ class Dash_handler:
 
         return (f"INSERT INTO plixer.users_dashboards(dashboard_id, user_id, is_default)  VALUES ('{dashboard_id}','{user_id}','0')")
 
-    def make_dash_gadget(self, gadget_id, gadget_name, gadget_json, user_id):
+    def make_dash_gadget(self, gadget_name,gadget_id, gadget_json, user_id):
         gadget_id = 'report_' + str(gadget_id)
         return(f"INSERT INTO plixer.dash_gadgets(gadget_id, gadget_name, gadget_type,gadget_json, category_id,created_by) VALUES ('{gadget_id}', '{gadget_name}', 'report', '{gadget_json}', '2','1')")
 
@@ -24,3 +24,10 @@ class Dash_handler:
     def find_dashboard_id(self, dash_name):
 
         return (f"SELECT dashboard_id FROM plixer.dash_tabs WHERE dashboard_name = '{dash_name}'")
+
+    def delete_dashboard(self, dash_id):
+
+        return ([
+                f"DELETE FROM plixer.dash_tabs WHERE dashboard_id = '{dash_id}'",
+                f"DELETE FROM plixer.users_dashboards WHERE dashboard_id = '{dash_id}'"
+        ])
