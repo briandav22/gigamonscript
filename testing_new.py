@@ -4,7 +4,7 @@ from modules.dashbaord_handler import Dash_handler
 from modules.report_handler import Report_handler
 from modules.json_handler import Json_handler
 from modules.report_designer import Report_designer
-from reports.reports import Report_types
+
 
 import configparser
 import json
@@ -25,7 +25,6 @@ report_handler = Report_handler()
 
 json_handler = Json_handler()
 
-report_types = Report_types()
 
 report_designer = Report_designer()
 

@@ -3,8 +3,13 @@ from modules.dashbaord_handler import Dash_handler
 from modules.report_handler import Report_handler
 from modules.json_handler import Json_handler
 from modules.report_designer import Report_designer
+from modules.report_maker import make_report
 
-from prebuilts.gigamon_dashes import dns_monitor
+#prebuilt dashboards
+from prebuilts.gigamon.gigamon_dns import dns_monitor
+
+#prebuilt designed reports
+from prebuilts.gigamon.gigamon_reports import gigamon_dns_queries, gigamon_dns_requestors
 
 
 import configparser
@@ -33,59 +38,6 @@ report_designer = Report_designer()
 db_handler = DB_handler(db_name,db_user,db_pass,db_host)
 
 
-
-
-# until we have logic to find gigamon devices, we will use all devices. 
-
-exporter = 'in_GROUP_ALL'
-
-#admin user by default
-
-user_id = 1
-
-# metadata about what to create. 
-
-dashboard_DNS = 'Gigamon - DNS Monitor Test'
-dashboard_Sus = 'Gigamon - Suspicious Traffic'
-dashboard_Ver = 'Gigamon - Version Count'
-
-
-#reports to create
-
-report_1 = {
-    'name' : 'Gigamon - Top DNS Test',
-    'lang' : 'flowCountByWKP',
-    'filters' : {"sdfPorts_0":"in_53-17"},
-    'position' : { 'width':12, 'height':14, 'y':0, 'x':0 },
-    'direction':'inbound',
-    'time_range':'Last24Hours',
-    'data_type': 'total',
-    'stacked':'stacked',
-    'exporter': exporter,
-    'view':'graph',
-    'user_id':user_id,
-    'dashboard': dashboard_DNS
-
-}
-
-report_2 = {
-    'name': 'Gigamon - DNS Source Test',
-    'lang': 'flowCountBySource',
-    'filters' : {"sdfPorts_0":"in_53-17"},
-    'position': {'width':4,'height':9,'x':0,'y':14},
-    'direction':'inbound',
-    'time_range':'Last24Hours',
-    'data_type': 'total',
-    'stacked':'stacked',
-    'exporter':exporter,
-    'view':'table',
-    'user_id':user_id,
-    'dashboard': dashboard_DNS
-
-}
-
-dns_dash = [report_1,report_2]
-
 # create the dashboard. 
 def create_dashboard(dashbaord_name):
     #find next available dashID
@@ -108,6 +60,7 @@ def create_dashboard(dashbaord_name):
 
 ## finds the next available saved report ID
 def get_availabled_saved_id():
+    print('gettting saved report id')
     saved_id_query = report_handler.available_saved_id()
     saved_id = db_handler.execute_query(saved_id_query)[0]
 
@@ -117,7 +70,7 @@ def get_availabled_saved_id():
 # create saved report object, this is the JSON passed into the Query to make a saved report. 
 
 def create_report_object(report_object):
-    
+    print('creating report object')
     saved_id = get_availabled_saved_id()
 
     report_name = report_object['name']
@@ -137,7 +90,7 @@ def create_report_object(report_object):
 ## created a saved report.
 
 def created_saved_report(report_obj):
-    
+    print('creating saved report')
     saved_id = get_availabled_saved_id()
 
     report_name = json.loads(report_obj)["saved"]["name"]
@@ -150,6 +103,7 @@ def created_saved_report(report_obj):
 
 
 def make_dash_gadget(report_object):
+    print('making dashboard gadget')
 
     report_name = report_object['name']
     view = report_object['view']
@@ -164,7 +118,7 @@ def make_dash_gadget(report_object):
 
 
 def create_dashbord_json(report_list):
-
+    print('making dashboard JSON')
 
     gadget_json_list = []
 
@@ -182,6 +136,7 @@ def create_dashbord_json(report_list):
 
 
 def place_gadgets(dashboard_name, gadget_json):
+    print('placing gadgets on dash')
     dash_id = dash_handler.find_dashboard_id(dashboard_name)
     dash_id = db_handler.execute_query(dash_id)[0]
 
@@ -195,6 +150,9 @@ def main(report_list):
     dashboard_name = report_list[0]['dashboard']
 
     create_dashboard(dashboard_name)
+
+    make_report(gigamon_dns_queries)
+    make_report(gigamon_dns_requestors)
 
     for report in report_list:
         #make report object
@@ -214,7 +172,7 @@ def main(report_list):
 db_handler.open_connection()
 
 
-main(dns_dash)
+main(dns_monitor)
 
 
 #close connection
