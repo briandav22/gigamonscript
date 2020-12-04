@@ -31,6 +31,7 @@ class Report_designer():
         self.total_operation = 'total_operation'
         self.lowbad = 'lowbad'
         self.manufactured = 'manufactured'
+        self.select = 'select'
 
         return
 
@@ -200,11 +201,11 @@ class Report_designer():
                     column  = f"('{report_id}', '{column_name}', {manufactured})"
                     all_report_column.append(column)
 
-                # elif self.trend_by in column:
-                #     column_name = column[self.trend_by][self.col_nam_reg]
-                #     manufactured = column[self.trend_by][self.manufactured]
-                #     column  = f"('{report_id}', '{column_name}', {manufactured})"
-                #     all_report_column.append(column)
+                elif self.select in column:
+                    select_name = column[self.select][self.col_name]
+                    manufactured_name = column[self.select][self.manufactured]
+                    column  = f"('{report_id}', '{select_name}', {manufactured_name})"
+                    all_report_column.append(column)
 
         values = self._unpack(all_report_column)
 

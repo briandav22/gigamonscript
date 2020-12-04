@@ -26,10 +26,10 @@ class Report_handler:
 
 
     def delete_report_as_gadget(self, report_name):
-        return(f"DELETE FROM plixer.dash_gadgets WHERE gadget_name = {report_name}")
+        return(f"DELETE FROM plixer.dash_gadgets WHERE gadget_name = '{report_name}'")
 
-    def delete_saved_report(self, report_id):
-        return(f"DELETE FROM reporting.saved_reports WHERE saved_id = {report_id}")
+    def delete_saved_report(self, saved_name):
+        return(f"DELETE FROM reporting.saved_reports WHERE saved_name = '{saved_name}'")
 
     def delete_designed_report(self, report_id, report_name):
         return([

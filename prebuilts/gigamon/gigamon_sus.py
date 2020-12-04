@@ -1,5 +1,5 @@
 dashboard_Sus = 'Gigamon - Suspicious Traffic'
-dashboard_Ver = 'Gigamon - Version Count'
+
 
 
 sus_protocals = { 'sdfPorts_0': 'in_22-6', 'sdfPorts_1': 'in_3389-6', 'sdfPorts_2': 'in_23-6'}
@@ -12,7 +12,7 @@ sus_1 = {
     'name' : 'Gigamon - Protocol Watch',
     'lang' : 'flowCountByWKP',
     'filters' : sus_protocals,
-    'position' : { 'width':12, 'height':14, 'y':0, 'x':0 },
+    'position' : { 'width':12, 'height':13, 'y':0, 'x':0 },
     'direction':'inbound',
     'time_range':'Last24Hours',
     'data_type': 'total',
@@ -25,11 +25,11 @@ sus_1 = {
 }
 
 
-dns_2 = {
-    'name': 'Gigamon - DNS Source',
-    'lang': 'flowCountBySource',
-    'filters' : {"sdfPorts_0":"in_53-17"},
-    'position': {'width':4,'height':9,'x':0,'y':14},
+sus_2 = {
+    'name': 'Gigamon - Protocol External',
+    'lang': 'custom_protowatch',
+    'filters' : sus_protocals,
+    'position': {'width':6,'height':6,'x':0,'y':14},
     'direction':'inbound',
     'time_range':'Last24Hours',
     'data_type': 'total',
@@ -37,15 +37,25 @@ dns_2 = {
     'exporter':exporter,
     'view':'table',
     'user_id':user_id,
-    'dashboard': dashboard_DNS
+    'dashboard': dashboard_Sus
 
 }
 
-dns_3 = {
-    'position': {'width':4,'height':9,'x':4,'y':14},
+
+sus_3 = {
+    'name': 'Gigamon - Country Count',
+    'lang': 'custom_dstcountrycount',
+    'filters' : {},
+    'position': {'width':6,'height':6,'x':6,'y':13},
+    'direction':'inbound',
+    'time_range':'Last24Hours',
+    'data_type': 'total',
+    'stacked':'stacked',
+    'exporter':exporter,
+    'view':'table',
+    'user_id':user_id,
+    'dashboard': dashboard_Sus
+
 }
 
-dns_4 = {
-    'position': {'width':4,'height':9,'x':8,'y':14},
-}
-
+sus_monitor = [sus_1, sus_2, sus_3]

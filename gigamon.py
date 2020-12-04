@@ -7,16 +7,17 @@ from modules.report_maker import make_report
 
 #prebuilt dashboards
 from prebuilts.gigamon.gigamon_dns import dns_monitor
+from prebuilts.gigamon.gigamon_sus import sus_monitor
 
 #prebuilt designed reports
-from prebuilts.gigamon.gigamon_reports import gigamon_dns_queries, gigamon_dns_requestors
+from prebuilts.gigamon.gigamon_reports import gigamon_dns_queries, gigamon_dns_requestors, gigamon_protocols_external, gigamon_countries
 
 
 import configparser
 import json
 import os
 
-
+from delete_everything import delete_saved_reports,delete_dashboards,delete_designed_reports, delete_dashboard_gadgets
 
 
 # iniate database configuration information.
@@ -145,14 +146,14 @@ def place_gadgets(dashboard_name, gadget_json):
     db_handler.execute_query(add_gadgets_query)
     
 
-def main(report_list):
+def main(report_list, report1, report2):
 
     dashboard_name = report_list[0]['dashboard']
 
     create_dashboard(dashboard_name)
 
-    make_report(gigamon_dns_queries)
-    make_report(gigamon_dns_requestors)
+    make_report(report1)
+    make_report(report2)
 
     for report in report_list:
         #make report object
@@ -167,12 +168,22 @@ def main(report_list):
 
     place_gadgets(dashboard_name, json_for_dash)
 
+def delete_all(report_list, dns_query, dns_requestor):
+    delete_saved_reports(report_list)
+    delete_dashboard_gadgets(report_list)
+    delete_dashboards(report_list)
+    delete_designed_reports(dns_query)
+    delete_designed_reports(dns_requestor)
+
+
 
 #open connection to DB
 db_handler.open_connection()
 
+delete_all(dns_monitor, gigamon_dns_queries, gigamon_dns_requestors)
+delete_all(sus_monitor, gigamon_protocols_external, gigamon_countries)
 
-main(dns_monitor)
+# delete_all(dns_monitor, gigamon_dns_queries, gigamon_dns_requestors)
 
 
 #close connection
