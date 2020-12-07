@@ -11,11 +11,6 @@ import json
 import os
 
 
-#prebuilt dashboards
-from prebuilts.gigamon.gigamon_dns import dns_monitor
-
-#prebuilt designed reports
-from prebuilts.gigamon.gigamon_reports import gigamon_dns_queries, gigamon_dns_requestors
 
 config = configparser.ConfigParser()
 config.read(os.path.join(os.path.dirname(__file__), 'config', 'db_creds.ini'))

@@ -246,3 +246,113 @@ gigamon_countries = [
 
 
 ]
+
+
+
+
+gigamon_version_count = [
+                
+                
+                [
+                {"headers":{
+                        "rpt_lang":"custom_smbversion",
+                        "pretty_name":"Gigamon SMB Version",
+                        "menu_group": 23,
+                        "graph_type":"stacked",
+                        "bi_width":950,
+                        "totals_table":0
+                    }},
+                    
+                    {"group_by":{
+                    "col_name":"gm_smb_fileserver_version",
+                    "col_order":1,
+                    "col_lang":"SMB Version",
+                    "col_style":"width_dynamic",
+                    "col_header_title_attr":"null",
+                    "col_width":"dynamic",
+                    "manufactured": 'null'}},
+                    
+
+                {"trend_by":{
+                    "col_name_sum":"sum_plixeraggregatedrecordcount",
+                    "col_nam_reg":"plixeraggregatedrecordcount",
+                    "col_order":2,
+                    "col_lang":"Count",
+                    "col_style":"alignRight,dataWidth,width_dynamic",
+                    "col_header_title_attr":"null",
+                    "col_width":"dynamic",
+                    "col_operation":"sum",
+                    "default_col":1,
+                    "availableratetotals":"rate,total",
+                    "defaultratetotal":"total",
+                    "availablegraphstyles":"stacked,nonStacked",
+                    "defaultgraphstyle":"stacked",
+                    "showother":0,
+                    "percentok":0,
+                    "units":'',
+                    "total_operation":"sum",
+                    "lowbad":0,
+                    "manufactured": 'null'}}                            
+                
+                    
+
+                ]
+
+
+]
+
+
+gigamon_response_count = [
+                
+                
+                [
+                {"headers":{
+                        "rpt_lang":"custom_responsecount",
+                        "pretty_name":"Gigamon HTTP Code Count",
+                        "menu_group": 23,
+                        "graph_type":"stacked",
+                        "bi_width":950,
+                        "totals_table":0
+                    }},
+                    
+                    {"group_by":{
+                    "col_name":"httpstatuscode",
+                    "col_order":1,
+                    "col_lang":"Response Code",
+                    "col_style":"width_dynamic",
+                    "col_header_title_attr":"null",
+                    "col_width":"dynamic",
+                    "manufactured": 'null'}},
+                    
+
+                {"trend_by":{
+                    "col_name_sum":"sum_plixeraggregatedrecordcount",
+                    "col_nam_reg":"plixeraggregatedrecordcount",
+                    "col_order":2,
+                    "col_lang":"Count",
+                    "col_style":"alignRight,dataWidth,width_dynamic",
+                    "col_header_title_attr":"null",
+                    "col_width":"dynamic",
+                    "col_operation":"sum",
+                    "default_col":1,
+                    "availableratetotals":"rate,total",
+                    "defaultratetotal":"total",
+                    "availablegraphstyles":"stacked,nonStacked",
+                    "defaultgraphstyle":"stacked",
+                    "showother":0,
+                    "percentok":0,
+                    "units":'',
+                    "total_operation":"sum",
+                    "lowbad":0,
+                    "manufactured": 'null'}}                            
+                
+                    
+
+                ]
+
+
+]
+
+
+
+gigamon_reports_list = [gigamon_dns_queries, gigamon_dns_requestors, gigamon_protocols_external, gigamon_countries, gigamon_version_count,gigamon_response_count]

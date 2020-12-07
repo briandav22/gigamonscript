@@ -6,18 +6,32 @@ from modules.report_designer import Report_designer
 from modules.report_maker import make_report
 
 #prebuilt dashboards
-from prebuilts.gigamon.gigamon_dns import dns_monitor
-from prebuilts.gigamon.gigamon_sus import sus_monitor
+
+from custom_dashboards.gigamon.dashboards.gigamon_counts import count_monitor
+from custom_dashboards.gigamon.dashboards.gigamon_sus import sus_monitor
+from custom_dashboards.gigamon.dashboards.gigamon_dns import dns_monitor
+# from custom_dashboards.gigamon.dashboards.dashboard_names import gigamon_dashboards
 
 #prebuilt designed reports
-from prebuilts.gigamon.gigamon_reports import gigamon_dns_queries, gigamon_dns_requestors, gigamon_protocols_external, gigamon_countries
-
+from custom_dashboards.gigamon.designed_reports.gigamon_reports import gigamon_reports_list
 
 import configparser
 import json
 import os
+import sys,getopt
 
 from delete_everything import delete_saved_reports,delete_dashboards,delete_designed_reports, delete_dashboard_gadgets
+
+
+# Include standard modules
+import argparse
+
+# Initiate the parser
+parser = argparse.ArgumentParser()
+parser.add_argument("-V", "--version", help="show program version", action="store_true")
+parser.add_argument("-G", "--make", help="specificy dashboard to make")
+parser.add_argument("-D", "--delete", help="Delete a Dashboard, supply dashboard name after")
+args = parser.parse_args()
 
 
 # iniate database configuration information.
@@ -64,14 +78,15 @@ def get_availabled_saved_id():
     print('gettting saved report id')
     saved_id_query = report_handler.available_saved_id()
     saved_id = db_handler.execute_query(saved_id_query)[0]
-
+    print(f'saved_id is {saved_id}')
     return saved_id
 
 
 # create saved report object, this is the JSON passed into the Query to make a saved report. 
 
 def create_report_object(report_object):
-    print('creating report object')
+    rep_nam = report_object['name']
+    print(f'creating report object for {rep_nam}')
     saved_id = get_availabled_saved_id()
 
     report_name = report_object['name']
@@ -95,7 +110,7 @@ def created_saved_report(report_obj):
     saved_id = get_availabled_saved_id()
 
     report_name = json.loads(report_obj)["saved"]["name"]
-
+    print(f'{report_name} object created')
     created_report_query = report_handler.create_report_query(saved_id,report_name,report_obj,1)
     
     db_handler.execute_query(created_report_query)
@@ -104,12 +119,12 @@ def created_saved_report(report_obj):
 
 
 def make_dash_gadget(report_object):
-    print('making dashboard gadget')
+    
 
     report_name = report_object['name']
     view = report_object['view']
     user = report_object['user_id']
-
+    print(f'making dashboard gadget for {report_name}')
     saved_id_query = report_handler.get_saved_report_id(report_name)
     saved_id = db_handler.execute_query(saved_id_query)[0]
     gadget_json = json_handler.gadget_json(view,saved_id)
@@ -124,6 +139,8 @@ def create_dashbord_json(report_list):
     gadget_json_list = []
 
     for report in report_list:
+        rep_name = report['name']
+        print(f'making gadget for {rep_name}')
         gadget_id = report_handler.get_gadget_id(report['name'])
         gadget_id = db_handler.execute_query(gadget_id)[0]
         gadget_json = json_handler.add_gadget_json(gadget_id, report['position'])
@@ -137,7 +154,7 @@ def create_dashbord_json(report_list):
 
 
 def place_gadgets(dashboard_name, gadget_json):
-    print('placing gadgets on dash')
+    print(f'placing gadgets on dash {dashboard_name}')
     dash_id = dash_handler.find_dashboard_id(dashboard_name)
     dash_id = db_handler.execute_query(dash_id)[0]
 
@@ -146,44 +163,58 @@ def place_gadgets(dashboard_name, gadget_json):
     db_handler.execute_query(add_gadgets_query)
     
 
-def main(report_list, report1, report2):
 
-    dashboard_name = report_list[0]['dashboard']
-
-    create_dashboard(dashboard_name)
-
-    make_report(report1)
-    make_report(report2)
-
-    for report in report_list:
-        #make report object
-        saved_obj = create_report_object(report)
-        #create report
-        created_saved_report(saved_obj)
-        #convert report into gadget 
-        make_dash_gadget(report)
+def delete_all(designed_reports, *kwargs):
 
     
-    json_for_dash = create_dashbord_json(report_list)
+    for dashboard in kwargs:
+        delete_saved_reports(dashboard)
+        delete_dashboard_gadgets(dashboard)
+        delete_dashboards(dashboard)
 
-    place_gadgets(dashboard_name, json_for_dash)
+    for designed_report in designed_reports:
+        delete_designed_reports(designed_report)
 
-def delete_all(report_list, dns_query, dns_requestor):
-    delete_saved_reports(report_list)
-    delete_dashboard_gadgets(report_list)
-    delete_dashboards(report_list)
-    delete_designed_reports(dns_query)
-    delete_designed_reports(dns_requestor)
+def main(designed_reports, *kwargs):
+
+    for dashboard in kwargs:
+        dash_name = dashboard[0]['dashboard']
+        print(f'create dashboard {dash_name}')
+        create_dashboard(dashboard[0]['dashboard'])
+
+    for designed_report in designed_reports:
+        make_report(designed_report)
+    
+    for dashboard in kwargs: 
+        for report in dashboard:
+            #make report object
+            saved_obj = create_report_object(report)
+            #create report
+            created_saved_report(saved_obj)
+            #convert report into gadget 
+            make_dash_gadget(report)
+        dashboard_name = dashboard[0]['dashboard']
+        json_for_dash = create_dashbord_json(dashboard)
+        place_gadgets(dashboard_name, json_for_dash)
 
 
 
 #open connection to DB
 db_handler.open_connection()
 
-delete_all(dns_monitor, gigamon_dns_queries, gigamon_dns_requestors)
-delete_all(sus_monitor, gigamon_protocols_external, gigamon_countries)
+# main(gigamon_reports_list, dns_monitor, sus_monitor, count_monitor)
+if __name__ == "__main__":
 
-# delete_all(dns_monitor, gigamon_dns_queries, gigamon_dns_requestors)
+    if args.make == 'gigamon':
+        print(f"making dashboard for {args.make}")
+        main(gigamon_reports_list, dns_monitor, sus_monitor, count_monitor)
+    elif args.delete == 'gigamon':
+        delete_all(gigamon_reports_list, dns_monitor, sus_monitor, count_monitor)
+
+
+
+
+
 
 
 #close connection

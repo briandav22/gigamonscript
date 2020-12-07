@@ -41,33 +41,33 @@ class Report_designer():
 
     def get_available_id(self):
         return(f"SELECT MAX(rt_id)+ 1 FROM plixer.report_types;")
+
+    def check_if_exists(self, report_obj):
+        for report in report_obj:
+            print(report)
+        return
     
     def report_headers(self, report_id, report_obj ):
-        headers = 'headers'
-        rpt_lang = 'rpt_lang'
-        menu_group = 'menu_group'
-        graph_type = 'graph_type'
-        bi_width = 'bi_width'
-        totals_table = 'totals_table'
 
         for report in report_obj:
             for element in report:
-                if headers in element:
-                    header_element = element[headers]
+                if self.headers in element:
+                    header_element = element[self.headers]
+                    print(header_element)
                     try:
-                        rpt_lang = header_element[rpt_lang]
-                        menu_group = header_element[menu_group]
-                        graph_type = header_element[graph_type]
-                        bi_width = header_element[bi_width]
-                        totals_table = header_element[totals_table]
+                        rpt_lang = header_element[self.rpt_lang]
+                        menu_group = header_element[self.menu_group]
+                        graph_type = header_element[self.graph_type]
+                        bi_width = header_element[self.bi_width]
+                        totals_table = header_element[self.totals_table]
+                        print(f'creating insert statment for {rpt_lang}')
                         headers = (f"INSERT INTO plixer.report_types (rt_id, rpt_lang, menugroup, graphtype, biwidth, totalstable, rt_source) VALUES ('{report_id}','{rpt_lang}','{menu_group}','{graph_type}',{bi_width},{totals_table},1);")
                         return headers
                     except Exception as err:
                         print('error creating report headers, make sure you have all the needed keys rpt_lang, menu_group, graph_type, bi_width, totals_table ')
                         print(err)
                         return
-                    headers = element[headers]
-                    rpt_lang = element['']
+
                 else:
                     print('report object does not have headers')
                     return
@@ -88,7 +88,6 @@ class Report_designer():
 
 
 
-        column_order = 1
         for report in report_object:
             for column in report:
 
@@ -107,6 +106,8 @@ class Report_designer():
                         print(column_groupby.keys())
                         print(error)
                         return
+                    
+                    print(f'creating columns for {col_name}, {col_lang}')
                     column_group  = f"('{report_id}','{col_name}','{col_order}','{col_lang}','{col_style}','{col_attr}','{col_width}')"
                     all_report_column.append(column_group)
 
@@ -145,8 +146,9 @@ class Report_designer():
             for column in report:
 
                 if self.group_by in column:
-
+                    
                     column_name = column[self.group_by][self.col_name]
+                    print(f'creating groupbys for {column_name}')
                     column  = f"('{report_id}','{column_name}')"
                     all_report_column.append(column)
 
@@ -177,7 +179,7 @@ class Report_designer():
                     units = col_trend[self.units]
                     total_operation = col_trend[self.total_operation]
                     lowbad = col_trend[self.lowbad]
-
+                    print(f'creating operations for {col_name}')
                     column = (f"('{report_id}','{col_name}','{operation}','{default_col}','{availableratetotals}','{defaultratetotal}','{availablegraphstyles}','{defaultgraphstyle}',{showother},{percentok},'{units}','{total_operation}',{lowbad})")
                     all_report_column.append(column)
 
@@ -199,12 +201,14 @@ class Report_designer():
                     column_name = column[self.group_by][self.col_name]
                     manufactured = column[self.group_by][self.manufactured]
                     column  = f"('{report_id}', '{column_name}', {manufactured})"
+                    print(f'creating groupby select for {column_name}')
                     all_report_column.append(column)
 
                 elif self.select in column:
                     select_name = column[self.select][self.col_name]
                     manufactured_name = column[self.select][self.manufactured]
                     column  = f"('{report_id}', '{select_name}', {manufactured_name})"
+                    print(f'creating tendby select for {select_name}')
                     all_report_column.append(column)
 
         values = self._unpack(all_report_column)
@@ -215,9 +219,11 @@ class Report_designer():
         for report in report_columns:
             for column in report:
                 if self.headers in column:
+                    
                     column_header = column[self.headers]
                     report_lang = column_header[self.rpt_lang]
                     report_name = column_header[self.pretty_name]
+                    print(f'adding langkery for {report_lang} to make pretty name {report_name}')
 
         return(f"INSERT INTO languages.custom (id,string) VALUES ('{report_lang}','{report_name}');")
 

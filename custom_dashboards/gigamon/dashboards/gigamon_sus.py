@@ -18,7 +18,7 @@ sus_1 = {
     'data_type': 'total',
     'stacked':'stacked',
     'exporter': exporter,
-    'view':'tableGraph"',
+    'view':'tableGraph',
     'user_id':user_id,
     'dashboard': dashboard_Sus
 
