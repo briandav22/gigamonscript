@@ -40,11 +40,11 @@ A project that helps Users and Engineers create 'quick start' dashboards for Scr
 
 ## Modifying the Script
 
-If you would like to create a dashboard outside of what is provided in the 'prebuilts' directory the steps you will need to take are. 
+If you would like to create a dashboard outside of what is provided you will need to:
 
-* create a **project directory** in the 'custom_dashboards' directory with to hold your new project. 
+* create a **project directory** in  'custom_dashboards'  hold your new dashboard(s). 
     * Add a **dashboards** sub directory
-    * if you dashboard requires **designed reports** and you would like to make them with the Script also add a **designed_reports** folder. 
+    * Add a **designed reports** sub directory - only if you intend on using reports that aren't out of the box with Scrutinizer. 
 
 
 
@@ -70,7 +70,9 @@ If you would like to create a dashboard outside of what is provided in the 'preb
 
     ### Dashboard Objects
 
-    Each dashboard object <b>MUST</b> have all of these key / value pairs, if you omit any of them you will throw an error and terminate the Script. These objects are responsible for a variety of things. 
+    Each dashboard object <b>MUST</b> have all of the key / value pairs shown below. if you omit any of them you will throw an error and terminate the Script. 
+    
+    These objects are responsible for: 
 
     1.) Creating the Dashboard 
 
@@ -79,7 +81,9 @@ If you would like to create a dashboard outside of what is provided in the 'preb
     3.) Converting those Saved Reports into Gadgets
 
     4.) Moving those Gadgets to the Dashboard in the correct position. 
+
     
+
 
     * lang : this is the report lang key, examples would be things like "conversationsWKP" or "applications"
     * filters : 
@@ -87,8 +91,8 @@ If you would like to create a dashboard outside of what is provided in the 'preb
 
 
 ```json
-{
-    "name" : "Name for Gadget",    
+report_1 = {
+    "name" : "Name for Gadget1",    
     "lang" : "report lang key", 
     "filters" : {}, 
     "position" : { "width":4, "height":15, "y":0, "x":0 },
@@ -101,6 +105,23 @@ If you would like to create a dashboard outside of what is provided in the 'preb
     "user_id":user_id,
     "dashboard": dashboard_counts
 }
+
+report_2 = {
+    "name" : "Name for Gadget2",    
+    "lang" : "report lang key", 
+    "filters" : {}, 
+    "position" : { "width":4, "height":15, "y":0, "x":0 },
+    "direction":"inbound",
+    "time_range":"Last24Hours",
+    "data_type": "total",
+    "stacked":"stacked",
+    "exporter": exporter,
+    "view":"tableGraph",
+    "user_id":user_id,
+    "dashboard": dashboard_counts
+}
+
+example_gadgets_list = [report_1, report_2]
 ```
     
     
