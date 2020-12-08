@@ -162,6 +162,11 @@ gigamon_protocols_external = [
                     "col_header_title_attr":"null",
                     "col_width":"dynamic",
                     "manufactured": 1}},
+
+                    {"select":{
+                    "col_name":"octetdeltacount",
+                    "manufactured": 'null'}},
+                
                     
 
                 {"trend_by":{

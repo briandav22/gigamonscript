@@ -175,15 +175,16 @@ def delete_all(designed_reports, *kwargs):
     for designed_report in designed_reports:
         delete_designed_reports(designed_report)
 
-def main(designed_reports, *kwargs):
+def main(designed_reports = None, *kwargs):
 
     for dashboard in kwargs:
         dash_name = dashboard[0]['dashboard']
         print(f'create dashboard {dash_name}')
         create_dashboard(dashboard[0]['dashboard'])
 
-    for designed_report in designed_reports:
-        make_report(designed_report)
+    if designed_reports is not None:
+        for designed_report in designed_reports:
+            make_report(designed_report)
     
     for dashboard in kwargs: 
         for report in dashboard:
