@@ -10,6 +10,8 @@ from modules.report_maker import make_report
 from custom_dashboards.gigamon.dashboards.gigamon_counts import count_monitor
 from custom_dashboards.gigamon.dashboards.gigamon_sus import sus_monitor
 from custom_dashboards.gigamon.dashboards.gigamon_dns import dns_monitor
+
+
 # from custom_dashboards.gigamon.dashboards.dashboard_names import gigamon_dashboards
 
 #prebuilt designed reports
@@ -164,16 +166,17 @@ def place_gadgets(dashboard_name, gadget_json):
     
 
 
-def delete_all(designed_reports, *kwargs):
+def delete_all(designed_reports = None, *kwargs):
 
     
     for dashboard in kwargs:
         delete_saved_reports(dashboard)
         delete_dashboard_gadgets(dashboard)
         delete_dashboards(dashboard)
-
-    for designed_report in designed_reports:
-        delete_designed_reports(designed_report)
+    
+    if designed_reports is not None:
+        for designed_report in designed_reports:
+            delete_designed_reports(designed_report)
 
 def main(designed_reports = None, *kwargs):
 
@@ -203,7 +206,7 @@ def main(designed_reports = None, *kwargs):
 #open connection to DB
 db_handler.open_connection()
 
-# main(gigamon_reports_list, dns_monitor, sus_monitor, count_monitor)
+
 if __name__ == "__main__":
 
     if args.make == 'gigamon':
