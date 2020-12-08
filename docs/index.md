@@ -5,8 +5,8 @@ A project that helps Users and Engineers create 'quick start' dashboards for Scr
 ## Commands
 
 
-* `python dashboard_maker.py --make [string that fires main() function call]` - call the main function to build your dashboards.
-* `python dashboard_maker.py --delete [string that fires delete_all() function call]` - call the delete_all function to remove your dashboard.
+* `python dashboard_maker.py --make [dashboard name]` - call the main function to build your dashboards.
+* `python dashboard_maker.py --delete [dashboard name]` - call the delete_all function to remove your dashboard.
 
 ## Example Commands 
 

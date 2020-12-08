@@ -40,7 +40,7 @@ config.read(os.path.join(os.path.dirname(__file__), 'config', 'db_creds.ini'))
 config_info = config['DB']
 db_name = config_info['db_name']
 db_user = config_info['scrutinizer_user']
-db_pass = config_info['scrutinizer_host']
+db_pass = config_info['scrutinizer_password']
 db_host = config_info['scrutinizer_host']
 
 
